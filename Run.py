@@ -11,19 +11,7 @@ from PIL import Image,ImageTk
 
 
 
-def resizeImg(img):
-    targetSize = 600
-    maxSize = 800
-    h = img.shape[0]
-    w = img.shape[1]
-    minDim = min(w, h)
-    maxDim = max(w, h)
 
-    scale = targetSize / minDim
-    if scale*maxDim > maxSize:
-        scale = maxSize / maxDim
-
-    return scale
 
 
 class segWindows(QWidget, Ui_Dialog):
@@ -32,16 +20,31 @@ class segWindows(QWidget, Ui_Dialog):
         self.setupUi(self)
         self.imgName = 'img/xixi.jpg'
 
+    def resizeImg(img):
+        targetSize = 600
+        maxSize = 800
+        h = img.shape[0]
+        w = img.shape[1]
+        minDim = min(w, h)
+        maxDim = max(w, h)
+
+        scale = targetSize / minDim
+        if scale * maxDim > maxSize:
+            scale = maxSize / maxDim
+
+        return scale
+
+
     def openImage(self):
         self.imgName = QFileDialog.getOpenFileName(self, 'Open Image',"", "*.jpg;;*.png;;All Files(*)" )[0]
         if len(self.imgName):
-            originImg = cv.imread(self.imgName)
-            # scale = resizeImg(originImg)
-            # img = cv.resize(originImg, (round(originImg.shape[1]*scale),round(originImg.shape[0]*scale)))
+            img = cv.imread(self.imgName)
+            # scale = resizeImg(img)
+            # img = cv.resize(img, (round(img.shape[1]*scale),round(img.shape[0]*scale)))
             img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
 
             # print(img.shape)
-            cv.imwrite('resizeImg.jpg', img)
+            # cv.imwrite('resizeImg.jpg', img)
             # img = img.copy()
             x = img.shape[1]
             y = img.shape[0]
