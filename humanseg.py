@@ -60,18 +60,22 @@ class Humanseg():
                      'api_secret': self.api_secret,
                      'image_base64': encodestr,
                      'return_grayscale': 0}
-        # post request
-        results = requests.post(self.url, data=form_data, headers=self.headers)
 
-        if results.status_code == 200:
-            # result content, json format
-            content = json.loads(results.text)
-            body_image = content['body_image']
-            imgdata = base64.b64decode(body_image)
-            with open(output_path, 'wb') as f:
-                f.write(imgdata)
-        else:
-            print('network error! status_code: %d ' % results.status_code)
+
+        while(True):
+            # post request
+            results = requests.post(self.url, data=form_data, headers=self.headers)
+            if results.status_code == 200:
+                # result content, json format
+                content = json.loads(results.text)
+                body_image = content['body_image']
+                imgdata = base64.b64decode(body_image)
+                with open(output_path, 'wb') as f:
+                    f.write(imgdata)
+                break
+            else:
+                print('network error! status_code: %d ' % results.status_code)
+                time.sleep(1)
         end_time = time.time()
 
         return end_time - start_time
